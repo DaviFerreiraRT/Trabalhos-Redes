@@ -2,23 +2,25 @@ import socket
 
 
 def main():
+    requisicao = b"GET /graduacao/sistemas-de-informacao/ HTTP/1.1\nHost: https://www.uni7.edu.br \n\n"
+
     socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    url = 'uni7.edu.br', 80
-    getRequest = b'GET /https://www.uni7.edu.br HTTP/1.0\r\n\r\n'
-    socketTCP.connect((url))
 
-    socketTCP.send(getRequest)
+    socketTCP.connect(("uni7.edu.br", 80))
+    
+    print("Conexão iniciada!")
+    
+    socketTCP.sendall(requisicao)
 
-    linha = ""
-    print("Conexao estabelecida com sucesso!")
-    while True:
-        data = socketTCP.recv(1)
-        linha += data.decode("UTF-8")
-        if data == b"\n":
-            print(linha)
-            break
+    resultado = socketTCP.recv(10000)
+
+    while (len(resultado) > 0):
+        print(resultado)
+        resultado = socketTCP.recv(10000)
 
     socketTCP.close()
+
+    print('Conexão encerrada!')
 
 
 main()
