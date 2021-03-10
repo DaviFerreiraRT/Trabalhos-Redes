@@ -1,78 +1,77 @@
 import socket
 import sys
-# args = sys.argv
-# request = args[1]
-# http_request = args[2]
+argumentos = sys.argv
+requestUrl = argumentos[1]
+http_method = argumentos[2]
 
+def get():
+    socketTCP = socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socketTCP.connect((requestUrl.replace('http://', ''), 80))
 
-# def get():
-#     socketTCP = socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     socketTCP.connect((request.replace('http://', ''), 80))
-#     print('conectado')
+    if http_method == 'POST':
+        print("Conectado com sucesso!")
 
-#     if http_request == 'POST':
-#         requisicao = (http_request + '' + request+'/'+'HTTP/1.0\n\n').encode()
-#         socketTCP.sendall(requisicao)
-#         while True:
-#             resultado = socketTCP.recv(1024)
-#             print(resultado.decode('UTF-8'))
-#     else:
-#         requisicao = (http_request + '' + request+'/'+'HTTP/1.0\n\n').encode()
-#         socketTCP.sendall(requisicao)
+        payload = argumentos[3]
+    else:
+        print('Conectado com sucesso!')
 
-#         resposta_servidor = ''
-#         while True:
-#             resultado = socketTCP.recv(1)
-#             resposta_servidor += resultado.decode('utf-8')
-#             if resultado == ''.encode():
-#                 break
-#         print(resposta_servidor)
+        requisicao = (http_method + ' ' + requestUrl + ' / HTTP/1.1\n\n').encode()
 
-#     socketTCP.close()
+        #socketTCP.sendall(requisicao)
+        socketTCP.sendall(
+        b" / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\r\n\r\n")
 
-def main():
+        # socketTCP.sendall(" GET / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\r\n\r\n")
 
-    socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    socketTCP.connect(("www.uni7.edu.br", 80))
+        resposta_servidor = ''
+        while True:
+            dados=socketTCP.recv(1)
+            resposta_servidor+=dados.decode('UTF-8')
+            if dados ==b'':
+                break
+        print(resposta_servidor)
+    socketTCP.close()
+    print('Conexão encerrada')
 
-    requisicao = input(str("Digite qual metodo <GET, POST, DELETE> vc deseja utilizar: ")).upper()
-    while True:
-        if requisicao == 'GET':
+    # def main():
 
-            print('Conexão iniciada!')
+    #     socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #     socketTCP.connect(("www.uni7.edu.br", 80))
 
-            print('Reposta HTTP:')
+    #     requisicao = input(
+    #         str("Digite qual metodo <GET, POST, DELETE> voce deseja utilizar: ")).upper()
+    #     if requisicao == 'GET':
 
-            socketTCP.sendall(
-                b"GET / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\r\n\r\n")
+    #         print('Conexão iniciada!')
 
-            print(str(socketTCP.recv(1024).decode('UTF-8')))
-            print('Conexão encerrada!')
-            break
+    #         print('Resposta HTTP:')
 
+    #         socketTCP.sendall(
+    #             b"GET / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\r\n\r\n")
 
-        elif requisicao == 'POST':
-            print('Conexão iniciada!')
+    #         print(str(socketTCP.recv(1024).decode('UTF-8')))
+    #         print('Conexão encerrada!')
 
-            print('Reposta HTTP:')
+    #     elif requisicao == 'POST':
+    #         print('Conexão iniciada!')
 
-            socketTCP.sendall(
-                b"POST / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\n\r um playload qualquer\n\r")
+    #         print('Reposta HTTP:')
 
-            print(str(socketTCP.recv(1024).decode('UTF-8')))
-            print('Conexão encerrada!')
-            break
-        elif requisicao == 'DELETE':
-            print('Conexão iniciada!')
+    #         socketTCP.sendall(
+    #             b"POST / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\n\r um playload qualquer\n\r")
 
-            print('Reposta HTTP:')
+    #         print(str(socketTCP.recv(1024).decode('UTF-8')))
+    #         print('Conexão encerrada!')
 
-            socketTCP.sendall(
-                b"DELETE / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\n\r um playload qualquer\n")
+    #     elif requisicao == 'DELETE':
+    #         print('Conexão iniciada!')
 
-            print(str(socketTCP.recv(1024).decode('UTF-8')))
-            print('Conexão encerrada!')
-            break
+    #         print('Reposta HTTP:')
 
-# get()
-main()
+    #         socketTCP.sendall(
+    #             b"DELETE / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\n\r um playload qualquer\n")
+
+    #         print(str(socketTCP.recv(1024).decode('UTF-8')))
+    #         print('Conexão encerrada!')
+
+get()
