@@ -1,7 +1,8 @@
 import socket
-
+import sys
 
 def main():
+    
     requisicao = b'GET /graduacao/ HTTP/1.1\nHost: http://www.uni7.edu.br \n\n'
 
     socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,12 +16,12 @@ def main():
 
     while (len(resultado) > 0):
         print("Conexão iniciada!")
-        print(resultado)
+        print(resultado.decode('UTF-8'))
         resultado = socketTCP.recv(1024)
 
     socketTCP.close()
 
     print('Conexão encerrada!')
 
-
+#get()
 main()
