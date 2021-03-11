@@ -8,20 +8,21 @@ def get():
     socketTCP = socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socketTCP.connect((requestUrl.replace('http://', ''), 80))
 
-    if http_method == 'POST':
+    if http_method.upper() == 'POST':
         print("Conectado com sucesso!")
 
         payload = argumentos[3]
-    else:
+        print(argumentos)
+    elif http_method.upper() == 'GET':
         print('Conectado com sucesso!')
 
-        requisicao = (http_method + ' ' + requestUrl + ' / HTTP/1.1\n\n').encode()
-
+        #requisicao = (http_method + ' ' + requestUrl +'/'+ ' / HTTP/1.1 / \r\nHost:'+requestUrl+'\rAccept:text/plain\r\n').encode()
+        request=(http_method+" / HTTP/1.1\r\nHost: "+requestUrl+"\r\nAccept: text/plain\r\n\r\n").encode()
         #socketTCP.sendall(requisicao)
-        socketTCP.sendall(
-        b" / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\r\n\r\n")
+        #socketTCP.sendall(
+        #b" / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\r\n\r\n")
 
-        # socketTCP.sendall(" GET / HTTP/1.1\r\nHost: uni7.edu.br\r\nAccept: text/plain\r\n\r\n")
+        socketTCP.sendall(request)
 
         resposta_servidor = ''
         while True:
