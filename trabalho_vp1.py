@@ -1,71 +1,70 @@
 import socket
 import sys
-argumentos = sys.argv
-requestUrl = argumentos[1]
-http_method = argumentos[2]
-
 
 def main():
-    socketTCP = socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    try:
+        argumentos = sys.argv
+        requestUrl = argumentos[1]
+        http_method = argumentos[2]
 
-    socketTCP.connect((requestUrl, 80))
+        socketTCP = socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    if http_method.upper() == 'GET':
-        print('Conectado com sucesso!')
+        socketTCP.connect((requestUrl, 80))
 
-        request = (http_method+" / HTTP/1.1\r\nHost: "+requestUrl +
-                   "\r\nAccept: text/plain\r\n\r\n").encode()
+        if http_method.upper() == 'GET':
+            print('Conectado com sucesso!')
 
-        socketTCP.sendall(request)
+            request = (http_method+" / HTTP/1.1\r\nHost: "+requestUrl +
+                    "\r\nAccept: text/plain\r\n\r\n").encode()
 
-        resposta_servidor = ''
-        while True:
-            dados = socketTCP.recv(1)
-            resposta_servidor += dados.decode('UTF-8')
-            if dados == b'':
-                break
-        print('Metodo http utilizado: '+http_method)
-        print(resposta_servidor)
-        socketTCP.close()
-        print('Conexão encerrada')
-    elif http_method.upper() == 'POST':
-        print('Conexão iniciada com sucesso!')
+            socketTCP.sendall(request)
+            resposta_servidor = ''
+            while True:
+                dados = socketTCP.recv(1)
+                resposta_servidor += dados.decode('UTF-8')
+                if dados == b'':
+                    break
+            print('Metodo http utilizado: '+http_method)
+            print(resposta_servidor)
+            socketTCP.close()
+            print('Conexão encerrada')
 
-        payload = "username=trabalhoVP1&pass=10conto\n\n"
+        elif http_method.upper() == 'POST':
+            print('Conexão iniciada com sucesso!')
 
-        header = ("""
-            POST /index.php / HTTP/1.1
-            Host: uni7.edu.br
-            Accept: text/plain / 
-            """+payload+"""
-            """)
+            payload = "username=trabalhoVP1&pass=umpayloadqualquer\n\n"
+            header = ("""
+                POST /index.php / HTTP/1.1
+                Host: uni7.edu.br
+                Accept: text/plain / 
+                """+payload+"""
+                """)
+            contentLength = "Content-Length: " + str(len(payload)) + "\n\n"
+            request = header.encode() + contentLength.encode() + payload.encode()
+            socketTCP.sendall(request)
+            response = socketTCP.recv(4096)
+            print(response.decode('UTF-8') + '\n')
+            socketTCP.close()
+            print('Conexão encerrada')
 
-        contentLength = "Content-Length: " + str(len(payload)) + "\n\n"
-        request = header.encode() + contentLength.encode() + payload.encode()
-        socketTCP.sendall(request)
-        response = socketTCP.recv(4096)
-        print(response.decode('UTF-8') + '\n')
-        socketTCP.close()
-        print('Conexão encerrada')
+        elif http_method.upper() == 'DELETE':
+            print('Conectado com sucesso!')
 
-    elif http_method.upper() == 'DELETE':
-        print('Conectado com sucesso!')
+            request = (http_method+" / HTTP/1.1\r\nHost: "+requestUrl +
+                    "\r\nAccept: text/plain\r\n\r\n").encode()
 
-        request = (http_method+" / HTTP/1.1\r\nHost: "+requestUrl +
-                   "\r\nAccept: text/plain\r\n\r\n").encode()
-
-        socketTCP.sendall(request)
-
-        resposta_servidor = ''
-        while True:
-            dados = socketTCP.recv(1)
-            resposta_servidor += dados.decode('UTF-8')
-            if dados == b'':
-                break
-        print('Metodo http utilizado: '+http_method)
-        print(resposta_servidor)
-        socketTCP.close()
-        print('Conexão encerrada')
-
-
+            socketTCP.sendall(request)
+            resposta_servidor = ''
+            while True:
+                dados = socketTCP.recv(1)
+                resposta_servidor += dados.decode('UTF-8')
+                if dados == b'':
+                    break
+            print('Metodo http utilizado: '+http_method)
+            print(resposta_servidor)
+            socketTCP.close()
+            print('Conexão encerrada')
+    except:
+        print("Você deve enviar dois argumentos\nEx: www.un7.edu.br <GET | DELETE | POST>!")
 main()
