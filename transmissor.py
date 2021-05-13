@@ -3,8 +3,8 @@ import numpy as np  # pip install numpy
 
 
 socketUDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-transmissor = ("127.0.0.1", 53595)
-receptor = ("127.0.0.1", 12854)
+transmissor = ("127.0.0.1", 2020)
+receptor = ("127.0.0.1", 3030)
 socketUDP.bind(transmissor)
 buff_size = 10000
 
@@ -50,7 +50,7 @@ def rdt_send(data):
 
     while True:
         rcvpkt = rdt_rcv()
-        is_corrupt = verify_checksum(rcvpkt)
+        is_corrupt = not verify_checksum(rcvpkt)
         is_ack = rcvpkt[2] == True
         is_nack = rcvpkt[2] == False
 
