@@ -66,6 +66,9 @@ def extract(rcvpkt,data):
 
         if is_corrupt or has_seq == 0:
             udt_send(sndpkt)
+        elif is_corrupt or has_seq == 1:
+            if once_thru == 1:
+                udt_send(sndpkt)
         if not is_corrupt and has_seq == 1:
             extract(rcvpkt,data)
             pass
